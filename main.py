@@ -3,6 +3,8 @@ from pygame.locals import *
 import numpy as np 
 import time
 import sys
+import random
+import pickle
 
 gameOver=False
 
@@ -69,6 +71,7 @@ def next_poblation():
 	global gameState
 	global newGameState
 	global sum_generation
+	global __generation__
 
 	sum_generation=0
 	for y in range(0, nxC):
@@ -93,7 +96,7 @@ def next_poblation():
 			sum_generation+=newGameState[x,y]
 
 	gameState =np.copy(newGameState)
-	if sum_generation!=0 and not pauseExect:
+	if sum_generation!=0 and pauseExect:
 		__generation__+=1
 
 
