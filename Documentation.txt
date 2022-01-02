@@ -1,0 +1,8 @@
+keyboard:
+  i >> info: generation
+  s >> print(generation)
+  g >> grid: enabled/unenabled 
+  k >> pause
+  c >> clear
+  n >> next generation
+  m >> mode: daytime/night-time
