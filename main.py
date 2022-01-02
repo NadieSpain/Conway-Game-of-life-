@@ -3,8 +3,6 @@ from pygame.locals import *
 import numpy as np 
 import time
 import sys
-import random
-import pickle
 
 gameOver=False
 
