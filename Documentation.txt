@@ -6,3 +6,7 @@ keyboard:
   c >> clear
   n >> next generation
   m >> mode: daytime/night-time
+  
+computer mouse:
+  left button and central button: activate
+  right button: disable
