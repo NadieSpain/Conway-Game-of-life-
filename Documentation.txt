@@ -1,9 +1,9 @@
 keyboard:
-  i >> info: generation
+  i >> info: generation,poblation, grid, 
   s >> print(generation)
   g >> grid: enabled/unenabled 
   k >> pause
-  c >> clear
+  r >> reset
   n >> next generation
   m >> mode: daytime/night-time
   
