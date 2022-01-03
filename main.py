@@ -1,4 +1,4 @@
-import pygame 
+iimport pygame 
 from pygame.locals import *
 import numpy as np 
 import time
@@ -6,28 +6,36 @@ import sys
 import random
 import pickle
 
+
+icon = pygame.image.load("game.png")
+pygame.display.set_icon(icon)
+
+pygame.display.set_caption("Conway 's Game of Life")
+
 gameOver=False
 
-boolcuadricula=True
+boolgrid=True
 boolinfo=False
 
 sum_generation=0
 __generation__=0
 
+list_generation=[]
 pygame.init()
 
 width, height = 750, 750
 screen = pygame.display.set_mode((height, width))
 
-negro=0,0,0
-blanco=255,255,255
-gris=128,128,128
-azul= 0,100,150
-amarillo=255, 233, 0
+black=0,0,0
+white=255,255,255
+grey=128,128,128
+blue= 0,100,150
+yellow=255, 233, 0
 
-bg= negro
-bg_cubo=blanco
-bg_cuadricula=gris
+bg= black
+bg_cube=white
+bg_grid=grey
+bg_font=yellow
 
 screen.fill(bg)
 
@@ -60,7 +68,7 @@ def save():
 def show_generation():
 	print(__generation__)
 
-def clear():
+def reset():
 	global __generation__
 	__generation__= 0
 	for y in range(0, nxC):
@@ -106,9 +114,18 @@ pauseExect= False
 while not gameOver:
 	if boolinfo:
 		fuente = pygame.font.SysFont("Terminal", 50)
-		mensaje= fuente.render("Generation: "+str(__generation__), 1, amarillo)
+		mensaje= fuente.render("Grid: {}x{}".format(nxC,nyC), 1, bg_font)
+		screen.blit(mensaje, (10, 10))
+		pygame.display.flip()
+
+		mensaje= fuente.render("Generation: "+str(__generation__), 1, bg_font)
 		screen.blit(mensaje, (width-250-(len(str(__generation__))*20), height-50))
 		pygame.display.flip()
+
+		mensaje= fuente.render("Poblation: "+str(round(sum_generation)), 1, bg_font)
+		screen.blit(mensaje, (10, height-50))
+		pygame.display.flip()
+
 
 	newGameState=np.copy(gameState)
 
@@ -139,7 +156,7 @@ while not gameOver:
 					#gameState=np.zeros((nxC,nyC))
 			if event.key ==pygame.K_DOWN:
 				r_l=save()
-				if nxC<=130:
+				if nxC<=110:
 					nxC+=10
 					nyC+=10
 					dimCW=width/nxC
@@ -151,20 +168,22 @@ while not gameOver:
 							newGameState[i[0],i[1]]=1
 						except:pass
 			if event.key==pygame.K_m:
-				if bg==negro:
-					bg=blanco
-					bg_cubo=negro
-					bg_cuadricula=azul
+				if bg==black:
+					bg=white
+					bg_cube=black
+					bg_grid=blue
+					bg_font=grey
 				else:
-					bg=negro
-					bg_cubo=blanco
-					bg_cuadricula=gris
+					bg=black
+					bg_cube=white
+					bg_grid=grey
+					bg_font=yellow
 			if event.key==pygame.K_k:
 				pauseExect= not pauseExect
-			if event.key==pygame.K_c:
-				clear()
+			if event.key==pygame.K_r:
+				reset()
 			if event.key==pygame.K_g:
-				boolcuadricula= not boolcuadricula 
+				boolgrid= not boolgrid 
 			if event.key==pygame.K_s:
 				#save()
 				show_generation()
@@ -203,21 +222,27 @@ while not gameOver:
 					((x+1) * dimCW, (y+1) * dimCH),
 					((x) * dimCW, (y+1) * dimCH)]
 
-			if newGameState[x,y]== 0 and boolcuadricula:
-				pygame.draw.polygon(screen,bg_cuadricula, poly ,1)
+			if newGameState[x,y]== 0 and boolgrid:
+				pygame.draw.polygon(screen,bg_grid, poly ,1)
 			elif newGameState[x,y]== 1:
-				pygame.draw.polygon(screen,bg_cubo, poly ,0)
+				pygame.draw.polygon(screen,bg_cube, poly ,0)
 
 
+	before_list_generation=list_generation
+	list_generation=save()
+	before_sum_generation=sum_generation
 	sum_generation=0
 	for y in range(0, nxC):
 		for x in range(0, nyC):
 			sum_generation+=newGameState[x,y]
 
-	if sum_generation!=0 and not pauseExect:
+	if sum_generation>0 and not pauseExect and before_list_generation!=list_generation:
 		__generation__+=1
-	elif sum_generation==0:
+	elif sum_generation>0 and before_sum_generation==0:
 		__generation__=0
+	elif list_generation==before_list_generation:
+		pass
+
 	gameState =np.copy(newGameState)
 	
 
